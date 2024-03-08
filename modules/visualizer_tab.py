@@ -27,8 +27,8 @@ class VisualizerTab:
             status = gr.Textbox(label="Status", lines=1, placeholder="Waiting")
             with gr.Row():
                 vis_button = gr.Button(value="Run Viser", variant="primary")
-                vis_cmd_button = gr.Button(value="Show Command")
                 stop_button = gr.Button(value="Stop", variant="stop")
+                vis_cmd_button = gr.Button(value="Show Command")
                 viser_button = gr.Button(value="Open Viser", variant="secondary")
                 viser_button.click(self.open_viser)
 
