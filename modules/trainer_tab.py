@@ -297,16 +297,8 @@ class TrainerTab(WebUITrainer):
             config.steps_per_save = steps_per_save
             config.vis = visualizer
             config.pipeline.datamanager.dataparser = dc.all_dataparsers[data_parser]
-
-            config.machine.num_devices = self.num_devices
-            config.machine.device_type = self.device_type
-            config.machine.num_machines = self.num_machines
-            config.machine.machine_rank = self.machine_rank
-            config.machine.dist_url = self.dist_url
-
             self.websocket_port = viewer_utils.get_free_port()
             config.viewer.websocket_port = self.websocket_port
-
             for key, value in self.dataparser_args.items():
                 setattr(config.pipeline.datamanager.dataparser, key, value)
             for key, value in self.model_args.items():

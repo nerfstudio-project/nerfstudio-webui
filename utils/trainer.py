@@ -31,7 +31,6 @@ class WebUITrainer:
         self.trainer = config.setup(local_rank=local_rank, world_size=world_size)
         self.trainer.setup()
         self.trainer.train()
-        
 
     def main(self):
         assert self.config is not None, "Config is not set"
