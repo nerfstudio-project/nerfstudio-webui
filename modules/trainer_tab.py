@@ -228,8 +228,9 @@ class TrainerTab(WebUITrainer):
             )
 
     def update_status(self, data_path, method, data_parser, visualizer):
-        if self.trainer is not None and self.trainer.step != 0:
-            return "Step: " + str(self.trainer.step)
+        if self.trainer is not None:
+            if self.trainer.step != 0:
+                return "Step: " + str(self.trainer.step)
         else:
             check = self.check(data_path, method, data_parser, visualizer)
             if check is not None:
