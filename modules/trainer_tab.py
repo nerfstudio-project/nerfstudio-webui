@@ -291,6 +291,7 @@ class TrainerTab(WebUITrainer):
         if self.run_in_new_terminal:
             run_cmd(cmd)
         else:
+            # set up the config
             config = mc.all_methods[method]
             config.data = Path(data_path)
             config.max_num_iterations = max_num_iterations
