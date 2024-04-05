@@ -1,5 +1,5 @@
 A Gradio Webui for Nerfstudio.
-![Screenshot](/nerfstudio-webui/screenshot.png)
+![Screenshot](screenshot.png)
 # Installation
 Gradio needs to be installed in the nerfstudio environment by running:
 ```bash
