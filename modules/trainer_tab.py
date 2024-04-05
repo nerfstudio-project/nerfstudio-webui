@@ -179,6 +179,7 @@ class TrainerTab(WebUITrainer):
                 outputs=status,
                 every=1,
             )
+
             run_button.click(
                 self.get_model_args,
                 inputs=[method] + self.model_arg_list,
@@ -198,9 +199,9 @@ class TrainerTab(WebUITrainer):
                     visualizer,
                 ],
                 outputs=None,
-            ).then(cancels=[update_event])
+            )
 
-            pause_button.click(self.pause, inputs=None, outputs=pause_button)
+            pause_button.click(self.pause, inputs=None, outputs=None)
 
             stop_button.click(
                 self.stop, inputs=None, outputs=status, cancels=[update_event]
@@ -229,27 +230,37 @@ class TrainerTab(WebUITrainer):
 
     def update_status(self, data_path, method, data_parser, visualizer):
         if self.trainer is not None and self.trainer.step != 0:
-            return "Step: " + str(self.trainer.step)
+            if self.trainer.training_state == "paused":
+                return "Paused"
+            elif self.trainer.training_state == "completed":
+                config_path = self.config.get_base_dir() / "config.yml"
+                ckpt_path = self.trainer.checkpoint_dir
+                self.trainer.early_stop = True
+                return (
+                    "Completed! Config and checkpoint saved at "
+                    + str(config_path)
+                    + " and "
+                    + str(ckpt_path)
+                )
+            else:
+                return "Step: " + str(self.trainer.step)
         else:
             check = self.check(data_path, method, data_parser, visualizer)
             if check is not None:
                 return check
-            return "Initializing..."
+            return "Initializing... Please check the terminal for more information."
 
     def pause(self):
         if self.trainer is not None:
             if self.trainer.training_state == "paused":
                 self.trainer.training_state = "training"
-                return "Pause"
             else:
                 self.trainer.training_state = "paused"
-                return "Resume"
         else:
             raise gr.Error("Please run the training first")
 
     def stop(self):
         # stop the training
-        # FIXME: this will not release the resources
         if self.trainer is not None:
             config_path = self.config.get_base_dir() / "config.yml"
             ckpt_path = self.trainer.checkpoint_dir
