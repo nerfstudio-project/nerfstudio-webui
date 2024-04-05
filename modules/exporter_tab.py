@@ -63,10 +63,10 @@ class ExporterTab:
                     data_path = gr.Textbox(
                         label="Data Path",
                         lines=1,
-                        placeholder="Path to the data folder",
+                        placeholder="Path to the model config",
                         scale=4,
                     )
-                    browse_button = gr.Button(value="Browse Image", scale=1)
+                    browse_button = gr.Button(value="Browse Config", scale=1)
                     browse_button.click(browse_cfg, None, outputs=data_path)
                     gr.ClearButton(components=[data_path], scale=1)
                 with gr.Row():
@@ -84,7 +84,7 @@ class ExporterTab:
                     data_path = gr.Textbox(
                         label="Data Path",
                         lines=1,
-                        placeholder="Path to the data folder",
+                        placeholder="Path to the model config",
                         scale=5,
                     )
                     input_button = gr.Button(value="Submit", scale=1)
