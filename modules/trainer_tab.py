@@ -233,15 +233,7 @@ class TrainerTab(WebUITrainer):
             if self.trainer.training_state == "paused":
                 return "Paused"
             elif self.trainer.training_state == "completed":
-                config_path = self.config.get_base_dir() / "config.yml"
-                ckpt_path = self.trainer.checkpoint_dir
-                self.trainer.early_stop = True
-                return (
-                    "Completed! Config and checkpoint saved at "
-                    + str(config_path)
-                    + " and "
-                    + str(ckpt_path)
-                )
+                return "Training Finished! Press stop to shut down the viewer."
             else:
                 return "Step: " + str(self.trainer.step)
         else:
@@ -264,15 +256,15 @@ class TrainerTab(WebUITrainer):
         if self.trainer is not None:
             config_path = self.config.get_base_dir() / "config.yml"
             ckpt_path = self.trainer.checkpoint_dir
-            self.trainer.early_stop = True
+            self.trainer.shutdown()
             print(
-                "Early Stopped. Config and checkpoint saved at "
+                "Stopped. Config and checkpoint saved at "
                 + str(config_path)
                 + " and "
                 + str(ckpt_path)
             )
             return (
-                "Early Stopped. Config and checkpoint saved at "
+                "Stopped. Config and checkpoint saved at "
                 + str(config_path)
                 + " and "
                 + str(ckpt_path)
