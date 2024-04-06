@@ -201,7 +201,7 @@ class TrainerTab(WebUITrainer):
                 outputs=None,
             )
 
-            pause_button.click(self.pause, inputs=None, outputs=None)
+            pause_button.click(self.pause, inputs=None, outputs=pause_button)
 
             stop_button.click(
                 self.stop, inputs=None, outputs=status, cancels=[update_event]
@@ -243,11 +243,16 @@ class TrainerTab(WebUITrainer):
             return "Initializing... Please check the terminal for more information."
 
     def pause(self):
+        """Pause or resume the training."""
+        """FIXME: If paused by webui, the viser pause button will work as resume button. """
         if self.trainer is not None:
             if self.trainer.training_state == "paused":
                 self.trainer.training_state = "training"
+                return "Pause"
             else:
                 self.trainer.training_state = "paused"
+                return "Resume"
+
         else:
             raise gr.Error("Please run the training first")
 
