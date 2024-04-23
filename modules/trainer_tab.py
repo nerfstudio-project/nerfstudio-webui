@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 import webbrowser
-
+import argparse
 import gradio as gr
 
 from nerfstudio.configs import dataparser_configs as dc, method_configs as mc
@@ -11,12 +11,10 @@ from nerfstudio.viewer_legacy.server import viewer_utils
 
 
 class TrainerTab(WebUITrainer):
-    def __init__(self, **kwargs):
+    def __init__(self, args: argparse.Namespace):
         super().__init__()
-        self.root_dir = kwargs.get("root_dir", "./")  # root directory
-        self.run_in_new_terminal = kwargs.get(
-            "run_in_new_terminal", False
-        )  # run in new terminal
+        self.root_dir = args.root_dir # root directory
+        self.run_in_new_terminal = args.run_in_new_terminal  # run in new terminal
 
         self.model_args_cmd = ""
         self.dataparser_args_cmd = ""
@@ -35,11 +33,12 @@ class TrainerTab(WebUITrainer):
         self.model_arg_names = []  # keep track of the model args names
         self.model_arg_idx = {}  # record the start and end index of the model args
 
-        self.num_devices = kwargs.get("num_devices", 1)
-        self.device_type = kwargs.get("device_type", "cuda")
-        self.num_machines = kwargs.get("num_machines", 1)
-        self.machine_rank = kwargs.get("machine_rank", 0)
-        self.dist_url = kwargs.get("dist_url", "auto")
+        self.num_devices = args.num_devices
+        self.device_type = args.device_type
+        self.num_machines = args.num_machines
+        self.machine_rank = args.machine_rank
+        self.dist_url = args.dist_url
+        self.user_websocket_port = args.websocket_port
 
         self.websocket_port = None
 
@@ -306,7 +305,10 @@ class TrainerTab(WebUITrainer):
             config.steps_per_save = steps_per_save
             config.vis = visualizer
             config.pipeline.datamanager.dataparser = dc.all_dataparsers[data_parser]
-            self.websocket_port = viewer_utils.get_free_port()
+            if self.user_websocket_port > 0:
+                self.websocket_port = self.user_websocket_port
+            else:
+                self.websocket_port = viewer_utils.get_free_port()
             config.viewer.websocket_port = self.websocket_port
             for key, value in self.dataparser_args.items():
                 setattr(config.pipeline.datamanager.dataparser, key, value)

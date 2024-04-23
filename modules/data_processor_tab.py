@@ -1,7 +1,7 @@
 import multiprocessing
 import os
 from pathlib import Path
-
+import argparse
 import gradio as gr
 from utils.utils import (
     get_folder_path,
@@ -42,12 +42,10 @@ dataprocessor_configs = {
 
 
 class DataProcessorTab:
-    def __init__(self, **kwargs):
+    def __init__(self, args: argparse.Namespace):
         super().__init__()
-        self.root_dir = kwargs.get("root_dir", "./")  # root directory
-        self.run_in_new_terminal = kwargs.get(
-            "run_in_new_terminal", False
-        )  # run in new terminal
+        self.root_dir = args.root_dir  # root directory
+        self.run_in_new_terminal = args.run_in_new_terminal # run in new terminal
 
         self.dataprocessor_args = {}
 

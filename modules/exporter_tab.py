@@ -1,7 +1,7 @@
 import multiprocessing
 import os
 from pathlib import Path
-
+import argparse
 import gradio as gr
 from utils.utils import (
     get_folder_path,
@@ -32,12 +32,10 @@ exporter_configs = {
 
 
 class ExporterTab:
-    def __init__(self, **kwargs):
+    def __init__(self, args: argparse.Namespace):
         super().__init__()
-        self.root_dir = kwargs.get("root_dir", "./")  # root directory
-        self.run_in_new_terminal = kwargs.get(
-            "run_in_new_terminal", False
-        )  # run in new terminal
+        self.root_dir = args.root_dir  # root directory
+        self.run_in_new_terminal = args.run_in_new_terminal  # run in new terminal
 
         self.exporter_args = {}
 
@@ -56,7 +54,8 @@ class ExporterTab:
                 exporter = gr.Radio(
                     choices=list(exporter_configs.keys()), label="Method", scale=5
                 )
-                run_button = gr.Button(value="Export", variant="primary", scale=1)
+                run_button = gr.Button(
+                    value="Export", variant="primary", scale=1)
                 stop_button = gr.Button(value="Stop", variant="stop", scale=1)
             if os.name == "nt":
                 with gr.Row():
@@ -100,7 +99,8 @@ class ExporterTab:
                     file_explorer.change(
                         lambda x: str(x), inputs=file_explorer, outputs=data_path
                     )
-                    input_button.click(submit, inputs=data_path, outputs=data_path)
+                    input_button.click(
+                        submit, inputs=data_path, outputs=data_path)
                 with gr.Row():
                     output_dir = gr.Textbox(
                         label="Output Path",
@@ -120,11 +120,13 @@ class ExporterTab:
                     file_explorer.change(
                         get_folder_path, inputs=file_explorer, outputs=output_dir
                     )
-                    out_button.click(submit, inputs=output_dir, outputs=output_dir)
+                    out_button.click(submit, inputs=output_dir,
+                                     outputs=output_dir)
             with gr.Accordion("Exporter Config", open=False):
                 for key, config in exporter_configs.items():
                     with gr.Group(visible=False) as group:
-                        generated_args, labels = generate_args(config, visible=True)
+                        generated_args, labels = generate_args(
+                            config, visible=True)
                         self.exporter_arg_list += generated_args
                         self.exporter_arg_names += labels
                         self.exporter_arg_idx[key] = [
@@ -132,7 +134,8 @@ class ExporterTab:
                             len(self.exporter_arg_list),
                         ]
                         self.exporter_groups.append(group)
-                        self.exporter_group_idx[key] = len(self.exporter_groups) - 1
+                        self.exporter_group_idx[key] = len(
+                            self.exporter_groups) - 1
                 exporter.change(
                     self.update_exporter_args_visibility,
                     inputs=exporter,
@@ -179,10 +182,10 @@ class ExporterTab:
         temp_args = {}
         args = list(args)
         names = self.exporter_arg_names[
-            self.exporter_arg_idx[exporter][0] : self.exporter_arg_idx[exporter][1]
+            self.exporter_arg_idx[exporter][0]: self.exporter_arg_idx[exporter][1]
         ]
         values = args[
-            self.exporter_arg_idx[exporter][0] : self.exporter_arg_idx[exporter][1]
+            self.exporter_arg_idx[exporter][0]: self.exporter_arg_idx[exporter][1]
         ]
         for key, value in zip(names, values):
             temp_args[key] = value
