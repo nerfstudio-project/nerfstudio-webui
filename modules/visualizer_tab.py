@@ -1,7 +1,7 @@
 import os
 import subprocess
 import webbrowser
-
+import argparse
 import gradio as gr
 
 
@@ -13,11 +13,9 @@ from utils.utils import (
 
 
 class VisualizerTab:
-    def __init__(self, **kwargs):
-        self.root_dir = kwargs.get("root_dir", "./")  # root directory
-        self.run_in_new_terminal = kwargs.get(
-            "run_in_new_terminal", False
-        )  # run in new terminal
+    def __init__(self, args: argparse.Namespace):
+        self.root_dir = args.root_dir  # root directory
+        self.run_in_new_terminal = args.run_in_new_terminal # run in new terminal
 
         self.p = None
         self.websocket_port = None
