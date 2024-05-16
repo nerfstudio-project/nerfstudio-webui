@@ -66,7 +66,7 @@ class DataProcessorTab:
                     data_path = gr.Textbox(
                         label="Data Path",
                         lines=1,
-                        placeholder="Path to the data folder",
+                        placeholder="Path to the data",
                         scale=4,
                     )
                     browse_button = gr.Button(value="Browse Image", scale=1)
@@ -89,7 +89,7 @@ class DataProcessorTab:
                     data_path = gr.Textbox(
                         label="Data Path",
                         lines=1,
-                        placeholder="Path to the data folder",
+                        placeholder="Path to the data",
                         scale=5,
                     )
                     input_button = gr.Button(value="Submit", scale=1)
