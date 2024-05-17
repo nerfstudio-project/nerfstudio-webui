@@ -51,6 +51,8 @@ This repository provides a user-friendly web interface for [Nerfstudio](https://
 
 Contributions to the Nerfstudio Gradio WebUI are welcome! If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request on the GitHub repository.
 
+This repo is still under developing and I'm currently a undergraduate student. Suggestions and contributions are super welcomed!
+
 ## Acknowledgments
 
 - [Nerfstudio](https://github.com/nerfstudio-project/nerfstudio) - The main repository for Nerfstudio.
