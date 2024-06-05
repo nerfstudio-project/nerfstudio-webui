@@ -5,6 +5,7 @@ from dataclasses import asdict, fields
 from pathlib import Path
 from tkinter import filedialog
 import re
+from typing import Literal
 
 import gradio as gr
 
@@ -66,9 +67,10 @@ def generate_args(config, visible=True):
         type = field.type  # string
         # print(field.name, value, type)
         # special case for Literal
-        pattern = r"Literal\[\((.*?)\)\]"
+        pattern = r"(?:typing\.Literal|Literal)\[(.*?)\]"
         matches = re.findall(pattern, str(type))
         if matches:
+            # print("matches", matches)
             if isinstance(value, str):
                 values = matches[0].split(", ")
                 values = [value.strip("'") for value in values]
