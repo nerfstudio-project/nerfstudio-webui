@@ -13,7 +13,7 @@ from nerfstudio.viewer_legacy.server import viewer_utils
 class TrainerTab(WebUITrainer):
     def __init__(self, args: argparse.Namespace):
         super().__init__()
-        self.root_dir = args.root_dir # root directory
+        self.root_dir = args.root_dir  # root directory
         self.run_in_new_terminal = args.run_in_new_terminal  # run in new terminal
 
         self.model_args_cmd = ""
