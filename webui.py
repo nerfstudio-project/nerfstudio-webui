@@ -1,7 +1,8 @@
 import gradio as gr
 import argparse
 from modules.data_processor_tab import DataProcessorTab
-from modules.exporter_tab import ExporterTab
+
+# from modules.exporter_tab import ExporterTab
 from modules.trainer_tab import TrainerTab
 from modules.visualizer_tab import VisualizerTab
 
@@ -15,7 +16,7 @@ class WebUI:
         self.trainer_tab = TrainerTab(args)
         self.visualizer_tab = VisualizerTab(args)
         self.data_processor_tab = DataProcessorTab(args)
-        self.exporter_tab = ExporterTab(args)
+        # self.exporter_tab = ExporterTab(args)
 
         self.setup_ui()
 
@@ -24,7 +25,7 @@ class WebUI:
             self.trainer_tab.setup_ui()
             self.visualizer_tab.setup_ui()
             self.data_processor_tab.setup_ui()
-            self.exporter_tab.setup_ui()
+            # self.exporter_tab.setup_ui()
 
     def launch(self, **kwargs):
         self.demo.launch(**kwargs)

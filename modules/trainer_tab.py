@@ -113,7 +113,9 @@ class TrainerTab(WebUITrainer):
                     )
                 with gr.Column():
                     dataparser = gr.Radio(
-                        choices=list(dc.dataparsers.keys()), label="Data Parser"
+                        choices=["default"] + list(dc.dataparsers.keys()),
+                        label="Data Parser",
+                        value="default",
                     )
                     visualizer = gr.Radio(
                         choices=[
@@ -294,7 +296,6 @@ class TrainerTab(WebUITrainer):
             visualizer,
         )
         print(cmd)
-        # run the command
         if self.run_in_new_terminal:
             run_cmd(cmd)
         else:
@@ -305,7 +306,9 @@ class TrainerTab(WebUITrainer):
             config.steps_per_save = steps_per_save
             config.vis = visualizer
             config.pipeline.datamanager.dataparser = dc.all_dataparsers[data_parser]
-            if self.user_websocket_port > 0:
+            if self.user_websocket_port > 0 and viewer_utils.is_port_open(
+                self.user_websocket_port
+            ):
                 self.websocket_port = self.user_websocket_port
             else:
                 self.websocket_port = viewer_utils.get_free_port()
@@ -336,11 +339,12 @@ class TrainerTab(WebUITrainer):
             raise gr.Error("Please select a data path")
         if visualizer == "":
             raise gr.Error("Please select a visualizer")
-        cmd = f"ns-train {method} {self.model_args_cmd} --vis {visualizer} --max-num-iterations {max_num_iterations} \
-        --steps-per-save {steps_per_save} --data {data_path} {data_parser} {self.dataparser_args_cmd}"
         check = self.check(data_path, method, data_parser, visualizer)
         if check is not None:
             return check
+        if data_parser == "default":
+            data_parser = ""
+        cmd = f"ns-train {method} {self.model_args_cmd} --vis {visualizer} --max-num-iterations {max_num_iterations} --steps-per-save {steps_per_save} --data {data_path} {data_parser} {self.dataparser_args_cmd}"
         return cmd
 
     def check(self, data_path, method, data_parser, visualizer):
@@ -371,6 +375,11 @@ class TrainerTab(WebUITrainer):
         self.model_args = temp_args
 
     def get_data_parser_args(self, dataparser, *args):
+        if dataparser == "default":
+            self.dataparser_args_cmd = ""
+            self.dataparser_args = {}
+            return
+
         temp_args = {}
         args = list(args)
         cmd = ""
@@ -398,6 +407,9 @@ class TrainerTab(WebUITrainer):
     def update_dataparser_args_visibility(self, dataparser):
         # print(group_keys)
         # print(dataparser_args)
+        if dataparser == "default":
+            return [gr.update(visible=False)] * len(self.dataparser_groups)
+
         idx = self.dataparser_group_idx[dataparser]
         # if the dataparser is not the current one, then hide the dataparser args
         update_info = [gr.update(visible=False)] * len(self.dataparser_groups)
