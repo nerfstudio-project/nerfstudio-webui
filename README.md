@@ -27,7 +27,7 @@ This repository provides a user-friendly web interface for [Nerfstudio](https://
 
 ## Usage
 
-1. Start the Nerfstudio Gradio WebUI by running the following command (You may want to change the root_dir in webui.py):
+1. Start the Nerfstudio Gradio WebUI by running the following command (Add --help to see more options):
 
    ```bash
    python webui.py
