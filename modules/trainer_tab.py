@@ -305,7 +305,7 @@ class TrainerTab(WebUITrainer):
             config.max_num_iterations = max_num_iterations
             config.steps_per_save = steps_per_save
             config.vis = visualizer
-            config.pipeline.datamanager.dataparser = dc.all_dataparsers[data_parser]
+
             if self.user_websocket_port > 0 and viewer_utils.is_port_open(
                 self.user_websocket_port
             ):
@@ -313,8 +313,12 @@ class TrainerTab(WebUITrainer):
             else:
                 self.websocket_port = viewer_utils.get_free_port()
             config.viewer.websocket_port = self.websocket_port
-            for key, value in self.dataparser_args.items():
-                setattr(config.pipeline.datamanager.dataparser, key, value)
+
+            if data_parser != "default":
+                config.pipeline.datamanager.dataparser = dc.all_dataparsers[data_parser]
+                for key, value in self.dataparser_args.items():
+                    setattr(config.pipeline.datamanager.dataparser, key, value)
+
             for key, value in self.model_args.items():
                 setattr(config.pipeline.model, key, value)
             # from nerfstudio.scripts import train
