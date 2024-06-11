@@ -65,15 +65,15 @@ def generate_args(config, visible=True):
         config_labels.append(field.name)
         value = getattr(config, field.name)
         type = field.type  # string
-        # print(field.name, value, type)
+        print(field.name, value, type)
         # special case for Literal
-        pattern = r"(?:typing\.Literal|Literal)\[(.*?)\]"
+        pattern = r"(?:typing_extensions\.Literal|typing\.Literal|Literal)\[(.*?)\]"
         matches = re.findall(pattern, str(type))
         if matches:
             # print("matches", matches)
             if isinstance(value, str):
                 values = matches[0].split(", ")
-                values = [value.strip("'") for value in values]
+                values = [value.strip("'\"()") for value in values]
                 # create a radio button
                 config_inputs.append(
                     gr.Radio(
