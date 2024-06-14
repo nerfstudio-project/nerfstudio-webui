@@ -65,7 +65,7 @@ def generate_args(config, visible=True):
         config_labels.append(field.name)
         value = getattr(config, field.name)
         type = field.type  # string
-        print(field.name, value, type)
+        # print(field.name, value, type)
         # special case for Literal
         pattern = r"(?:typing_extensions\.Literal|typing\.Literal|Literal)\[(.*?)\]"
         matches = re.findall(pattern, str(type))
