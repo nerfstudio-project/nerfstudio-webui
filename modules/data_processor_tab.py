@@ -250,7 +250,7 @@ class DataProcessorTab:
 
         method = None
         if dataprocessor == "ImagesToNerfstudioDataset":
-            method = "image"
+            method = "images"
         elif dataprocessor == "VideoToNerfstudioDataset":
             method = "video"
         elif dataprocessor == "ProcessPolycam":
