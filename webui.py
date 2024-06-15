@@ -138,6 +138,13 @@ if __name__ == "__main__":
         help="Disable the Exporter tab",
     )
 
+    parser.add_argument(
+        "--use_external_methods",
+        action="store_true",
+        default=False,
+        help="Use external methods in the Trainer tab",
+    )
+
     parsed_args: argparse.Namespace = parser.parse_args()
 
     app = WebUI(parsed_args)

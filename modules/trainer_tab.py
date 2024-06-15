@@ -3,8 +3,10 @@ from pathlib import Path
 import webbrowser
 import argparse
 import gradio as gr
+from traitlets import Instance
 
 from nerfstudio.configs import dataparser_configs as dc, method_configs as mc
+from nerfstudio.configs.external_methods import ExternalMethodDummyTrainerConfig
 from utils.trainer import WebUITrainer
 from utils.utils import run_cmd, get_folder_path, browse_folder, submit, generate_args
 from nerfstudio.viewer_legacy.server import viewer_utils
@@ -39,6 +41,14 @@ class TrainerTab(WebUITrainer):
         self.machine_rank = args.machine_rank
         self.dist_url = args.dist_url
         self.user_websocket_port = args.websocket_port
+
+        self.use_external_methods = args.use_external_methods
+        if self.use_external_methods:
+            self.method_descriptions = mc.all_descriptions
+            self.dataparsers = dc.all_dataparsers
+        else:
+            self.method_descriptions = mc.descriptions
+            self.dataparsers = dc.dataparsers
 
         self.websocket_port = None
 
@@ -105,7 +115,7 @@ class TrainerTab(WebUITrainer):
             with gr.Row():
                 with gr.Column():
                     method = gr.Radio(
-                        choices=list(mc.descriptions.keys()), label="Method"
+                        choices=list(self.method_descriptions.keys()), label="Method"
                     )
                     description = gr.Textbox(label="Description", visible=True)
                     method.change(
@@ -113,7 +123,7 @@ class TrainerTab(WebUITrainer):
                     )
                 with gr.Column():
                     dataparser = gr.Radio(
-                        choices=["default"] + list(dc.dataparsers.keys()),
+                        choices=["default"] + list(self.dataparsers.keys()),
                         label="Data Parser",
                         value="default",
                     )
@@ -133,10 +143,16 @@ class TrainerTab(WebUITrainer):
                     )
 
             with gr.Accordion("Model Config", open=False):
-                for key, value in mc.descriptions.items():
+                for key, value in self.method_descriptions.items():
                     with gr.Group(visible=False) as group:
-                        if key in mc.method_configs:
-                            model_config = mc.method_configs[key].pipeline.model  # type: ignore
+                        if key in mc.all_methods:
+                            if (
+                                type(mc.all_methods[key])
+                                is ExternalMethodDummyTrainerConfig
+                            ):
+                                continue
+
+                            model_config = mc.all_methods[key].pipeline.model  # type: ignore
                             generated_args, labels = generate_args(
                                 model_config, visible=True
                             )
@@ -155,7 +171,7 @@ class TrainerTab(WebUITrainer):
                 )
 
             with gr.Accordion("Data Parser Config", open=False):
-                for key, parser_config in dc.dataparsers.items():
+                for key, parser_config in self.dataparsers.items():
                     with gr.Group(visible=False) as group:
                         generated_args, labels = generate_args(
                             parser_config, visible=True
@@ -315,7 +331,7 @@ class TrainerTab(WebUITrainer):
             config.viewer.websocket_port = self.websocket_port
 
             if data_parser != "default":
-                config.pipeline.datamanager.dataparser = dc.all_dataparsers[data_parser]
+                config.pipeline.datamanager.dataparser = self.dataparsers[data_parser]
                 for key, value in self.dataparser_args.items():
                     setattr(config.pipeline.datamanager.dataparser, key, value)
 
@@ -406,7 +422,7 @@ class TrainerTab(WebUITrainer):
         self.dataparser_args = temp_args
 
     def get_model_description(self, method):
-        return mc.descriptions[method]
+        return self.method_descriptions[method]
 
     def update_dataparser_args_visibility(self, dataparser):
         # print(group_keys)
