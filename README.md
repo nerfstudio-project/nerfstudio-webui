@@ -53,7 +53,7 @@ Tested on Windows with 3070 and Linux with 2080ti. Multi-GPU untested. Subproces
 
 ## Contributing
 
-This repo is still under developing and I'm currently an junior undergraduate student. Contributions to the Nerfstudio Gradio WebUI are super welcomed! If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request on the GitHub repository.
+This repo is still under developing and I'm currently an undergraduate student. Contributions to the Nerfstudio Gradio WebUI are super welcomed! If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request on the GitHub repository.
 
 ## Acknowledgments
 
